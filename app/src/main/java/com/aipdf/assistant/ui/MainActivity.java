@@ -32,6 +32,15 @@ public class MainActivity extends AppCompatActivity {
             showFragment(new HomeFragment());
         }
 
+        binding.bottomNav.post(() -> {
+            int navHeight = binding.bottomNav.getHeight();
+            androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams lp =
+                    (androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams)
+                            binding.navHost.getLayoutParams();
+            lp.bottomMargin = navHeight > 0 ? navHeight : lp.bottomMargin;
+            binding.navHost.setLayoutParams(lp);
+        });
+
         binding.bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) return switchTo(new HomeFragment());
