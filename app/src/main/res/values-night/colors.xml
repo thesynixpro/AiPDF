@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="md_primary">#B8B4FF</color>
+    <color name="md_on_primary">#2121A0</color>
+    <color name="md_primary_container">#3B3BC0</color>
+    <color name="md_on_primary_container">#E0E0FF</color>
+    <color name="md_secondary">#4FD8EB</color>
+    <color name="md_on_secondary">#003840</color>
+    <color name="md_secondary_container">#004F5C</color>
+    <color name="md_on_secondary_container">#C0F0F8</color>
+    <color name="md_background">#121318</color>
+    <color name="md_on_background">#E3E1EC</color>
+    <color name="md_surface">#121318</color>
+    <color name="md_on_surface">#E3E1EC</color>
+    <color name="md_surface_variant">#46464F</color>
+    <color name="md_on_surface_variant">#C7C5D0</color>
+    <color name="md_outline">#919099</color>
+    <color name="md_error">#FFB4AB</color>
+    <color name="md_on_error">#690005</color>
+    <color name="md_error_container">#93000A</color>
+    <color name="md_on_error_container">#FFDAD6</color>
+    <color name="md_surface_container">#1E1F26</color>
+    <color name="md_surface_container_high">#282930</color>
+    <color name="md_ai_bubble">#25263E</color>
+    <color name="md_user_bubble">#3B3BC0</color>
+    <color name="md_success">#66BB6A</color>
+    <color name="md_warning">#FFA726</color>
+    <color name="pdf_page_shadow">#66000000</color>
+    <color name="reader_background">#000000</color>
+    <color name="reader_background_dark">#000000</color>
+</resources>

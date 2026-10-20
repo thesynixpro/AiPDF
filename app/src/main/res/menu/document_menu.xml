@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_open" android:title="@string/files_open" />
+    <item android:id="@+id/menu_rename" android:title="@string/files_rename" />
+    <item android:id="@+id/menu_share" android:title="@string/files_share" />
+    <item android:id="@+id/menu_export" android:title="@string/files_export" />
+    <item android:id="@+id/menu_delete" android:title="@string/files_delete" />
+</menu>
