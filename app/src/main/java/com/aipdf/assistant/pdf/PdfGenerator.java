@@ -188,6 +188,7 @@ public class PdfGenerator {
 
     private TextLayoutEngine.Cursor renderList(TextLayoutEngine.Cursor c, DocumentSpec.Element el,
                                                TextLayoutEngine layout, PDFont font) throws IOException {
+        if (el.items == null) return c;
         int i = 1;
         for (String item : el.items) {
             String prefix = el.ordered ? (i + ". ") : "- ";
