@@ -443,16 +443,19 @@ public class ChatFragment extends Fragment {
         if (conversationId <= 0) {
             return -1;
         }
-        MessageEntity m = new MessageEntity();
-        m.conversationId = conversationId;
+        final long convId = conversationId;
+        final MessageEntity m = new MessageEntity();
+        m.conversationId = convId;
         m.role = role;
         m.content = content;
         m.documentJson = isDoc;
         m.createdAt = System.currentTimeMillis();
-        long id = chatRepository.addMessageSync(m);
-        ConversationEntity c = chatRepository.findConversation(conversationId);
-        if (c != null) chatRepository.updateConversation(c);
-        return id;
+        AppExecutors.disk(() -> {
+            chatRepository.addMessageSync(m);
+            ConversationEntity c = chatRepository.findConversation(convId);
+            if (c != null) chatRepository.updateConversation(c);
+        });
+        return -1;
     }
 
     private void copyToClipboard(String text) {
