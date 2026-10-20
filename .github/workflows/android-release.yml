@@ -59,15 +59,13 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          set -o pipefail
-          gradle assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log
-          status=${PIPESTATUS[0]}
+          set +e
+          gradle assembleRelease --no-daemon --stacktrace > build.log 2>&1
+          status=$?
+          echo "gradle exit status: $status"
           if [ "$status" -ne 0 ]; then
-            echo "::error::assembleRelease failed (exit $status). Last 40 log lines:"
-            tail -n 40 build.log | while IFS= read -r line; do
-              echo "::error::$line"
-            done
-            exit "$status"
+            tail -n 80 build.log | sed 's/^/::error::/' || true
+            exit 1
           fi
 
       - name: Upload build log on failure
