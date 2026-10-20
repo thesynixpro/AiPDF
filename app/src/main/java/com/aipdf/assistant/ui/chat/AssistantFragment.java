@@ -8,13 +8,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.aipdf.assistant.R;
 import com.aipdf.assistant.databinding.FragmentAssistantBinding;
-import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.android.material.tabs.TabLayout;
 
 public class AssistantFragment extends Fragment {
+
+    private static final String TAG_CHAT = "assistant_chat";
+    private static final String TAG_HISTORY = "assistant_history";
 
     private static String pendingPrompt;
     private static String pendingDocumentName;
@@ -47,35 +49,46 @@ public class AssistantFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        binding.pager.setAdapter(new FragmentStateAdapter(this) {
-            @NonNull
+        binding.tabs.addTab(binding.tabs.newTab().setText(R.string.ai_tab_chat));
+        binding.tabs.addTab(binding.tabs.newTab().setText(R.string.ai_tab_history));
+        binding.tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public Fragment createFragment(int position) {
-                if (position == 0) {
-                    chatFragment = new ChatFragment();
-                    if (pendingPrompt != null) {
-                        chatFragment.setPendingPrompt(pendingPrompt);
-                        pendingPrompt = null;
-                    }
-                    if (pendingDocumentPath != null) {
-                        chatFragment.setPendingDocument(pendingDocumentName, pendingDocumentPath);
-                        pendingDocumentPath = null;
-                        pendingDocumentName = null;
-                    }
-                    return chatFragment;
-                }
-                return new HistoryFragment();
+            public void onTabSelected(TabLayout.Tab tab) {
+                showTab(tab.getPosition());
             }
 
             @Override
-            public int getItemCount() {
-                return 2;
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
             }
         });
 
-        new TabLayoutMediator(binding.tabs, binding.pager, (tab, position) ->
-                tab.setText(position == 0 ? R.string.ai_tab_chat : R.string.ai_tab_history))
-                .attach();
+        showTab(0);
+    }
+
+    private void showTab(int position) {
+        if (position == 0) {
+            chatFragment = new ChatFragment();
+            if (pendingPrompt != null) {
+                chatFragment.setPendingPrompt(pendingPrompt);
+                pendingPrompt = null;
+            }
+            if (pendingDocumentPath != null) {
+                chatFragment.setPendingDocument(pendingDocumentName, pendingDocumentPath);
+                pendingDocumentPath = null;
+                pendingDocumentName = null;
+            }
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.content, chatFragment, TAG_CHAT)
+                    .commitNow();
+        } else {
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.content, new HistoryFragment(), TAG_HISTORY)
+                    .commitNow();
+        }
     }
 
     @Override
