@@ -4,6 +4,7 @@ import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.pdmodel.PDPage;
 import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
 import com.tom_roush.pdfbox.pdmodel.font.PDFont;
+import com.tom_roush.pdfbox.pdmodel.font.PDType1Font;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -136,8 +137,9 @@ public class TextLayoutEngine {
         if (text == null || text.isEmpty()) return 0;
         try {
             return font.getStringWidth(text) / 1000f * fontSize;
-        } catch (IOException e) {
-            // Estimate when font metrics are unavailable.
+        } catch (Exception e) {
+            // Estimate when font metrics are unavailable or the text is not
+            // encodable by the font.
             return text.length() * fontSize * 0.5f;
         }
     }
@@ -152,9 +154,17 @@ public class TextLayoutEngine {
             char ch = text.charAt(i);
             if (ch == '\t') {
                 sb.append("    ");
-            } else if (ch < 256) {
+            } else if (ch >= 0x20 && ch < 0x7f) {
+                // Printable ASCII is always safe in WinAnsi.
+                sb.append(ch);
+            } else if (ch >= 0xa0 && ch <= 0xff) {
+                // Latin-1 printable range maps directly to WinAnsi.
+                sb.append(ch);
+            } else if (ch == '\n' || ch == '\r') {
                 sb.append(ch);
             } else {
+                // Control characters and non-Latin-1 glyphs are not encodable by
+                // the standard-14 fonts; transliterate instead of crashing.
                 sb.append(transliterate(ch));
             }
         }
