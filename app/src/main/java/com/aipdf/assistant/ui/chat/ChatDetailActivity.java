@@ -86,11 +86,15 @@ public class ChatDetailActivity extends AppCompatActivity {
         binding.btnAttach.setVisibility(View.GONE);
 
         if (conversationId > 0) {
-            com.aipdf.assistant.data.entity.ConversationEntity c =
-                    chatRepository.findConversation(conversationId);
-            if (c != null) {
-                binding.toolbar.setTitle(c.title);
-            }
+            final long convId = conversationId;
+            AppExecutors.disk(() -> {
+                com.aipdf.assistant.data.entity.ConversationEntity c =
+                        chatRepository.findConversation(convId);
+                final String title = c == null ? null : c.title;
+                AppExecutors.main(() -> {
+                    if (title != null) binding.toolbar.setTitle(title);
+                });
+            });
             loadMessages();
         }
     }
