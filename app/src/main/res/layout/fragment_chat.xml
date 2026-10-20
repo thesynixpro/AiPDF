@@ -50,31 +50,8 @@
         android:clipToPadding="false"
         android:paddingHorizontal="12dp"
         android:paddingVertical="8dp"
-        app:layout_constraintBottom_toTopOf="@id/empty_hint"
-        app:layout_constraintTop_toBottomOf="@id/provider_bar" />
-
-    <LinearLayout
-        android:id="@+id/empty_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@id/composer"
-        app:layout_constraintTop_toBottomOf="@id/provider_bar">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ai_suggested_title"
-            android:textAppearance="?attr/textAppearanceTitleSmall" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/suggestions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:chipSpacingVertical="4dp" />
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/provider_bar" />
 
     <LinearLayout
         android:id="@+id/generating_bar"
