@@ -27,7 +27,7 @@ android {
     def releaseStorePassword = System.getenv("KEYSTORE_PASSWORD")
     def releaseKeyAlias = System.getenv("KEY_ALIAS")
     def releaseKeyPassword = System.getenv("KEY_PASSWORD")
-    def hasReleaseSigning = releaseStoreFile != null && file(releaseStoreFile).exists()
+    def hasReleaseSigning = releaseStoreFile != null && !releaseStoreFile.trim().isEmpty() && file(releaseStoreFile).exists()
 
     signingConfigs {
         if (hasReleaseSigning) {
