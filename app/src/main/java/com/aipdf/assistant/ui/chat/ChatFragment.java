@@ -108,7 +108,6 @@ public class ChatFragment extends Fragment {
         binding.btnAttach.setOnClickListener(v -> attachLauncher.launch(new String[]{"application/pdf"}));
         binding.btnRemoveAttachment.setOnClickListener(v -> clearAttachment());
 
-        buildSuggestions();
         refreshProviderBar();
 
         if (pendingPrompt != null) {
@@ -143,26 +142,6 @@ public class ChatFragment extends Fragment {
             pendingDocumentName = name;
             pendingDocumentPath = path;
         }
-    }
-
-    private void buildSuggestions() {
-        binding.suggestions.removeAllViews();
-        addSuggestion(getString(R.string.suggested_create_cv));
-        addSuggestion(getString(R.string.suggested_business_plan));
-        addSuggestion(getString(R.string.suggested_invoice));
-        addSuggestion(getString(R.string.suggested_study_guide));
-        if (attachedDocument != null) addSuggestion(getString(R.string.suggested_summarize));
-        binding.emptyHint.setVisibility(adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
-    }
-
-    private void addSuggestion(String text) {
-        com.google.android.material.chip.Chip chip = new com.google.android.material.chip.Chip(requireContext());
-        chip.setText(text);
-        chip.setOnClickListener(v -> {
-            binding.input.setText(text);
-            onSendClicked();
-        });
-        binding.suggestions.addView(chip);
     }
 
     private void refreshProviderBar() {
@@ -229,7 +208,6 @@ public class ChatFragment extends Fragment {
         doc.pageCount = PdfAnalyzer.countPages(file);
         attachedDocument = doc;
         showAttachmentChip(doc.name);
-        if (adapter.getItemCount() == 0) buildSuggestions();
     }
 
     private void showAttachmentChip(String name) {
@@ -262,7 +240,6 @@ public class ChatFragment extends Fragment {
         }
         ensureConversation(userText);
         adapter.add(new ChatAdapter.Item(ChatAdapter.Item.TYPE_USER, userText));
-        binding.emptyHint.setVisibility(View.GONE);
         hideKeyboard();
         scrollToBottom();
 
