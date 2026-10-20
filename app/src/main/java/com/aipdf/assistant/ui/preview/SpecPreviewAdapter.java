@@ -60,6 +60,7 @@ public class SpecPreviewAdapter extends RecyclerView.Adapter<SpecPreviewAdapter.
                 blocks.add(h);
                 if (section.elements == null) continue;
                 for (DocumentSpec.Element el : section.elements) {
+                    if (el == null) continue;
                     blocks.add(describe(el));
                 }
             }
@@ -78,20 +79,25 @@ public class SpecPreviewAdapter extends RecyclerView.Adapter<SpecPreviewAdapter.
                 b.label = el.ordered ? "Numbered list" : "Bullet list";
                 StringBuilder sb = new StringBuilder();
                 int i = 1;
-                for (String item : el.items) {
-                    sb.append(el.ordered ? (i + ". ") : "• ").append(item).append("\n");
-                    i++;
+                if (el.items != null) {
+                    for (String item : el.items) {
+                        sb.append(el.ordered ? (i + ". ") : "• ").append(item == null ? "" : item).append("\n");
+                        i++;
+                    }
                 }
                 b.text = sb.toString().trim();
                 break;
             case "table":
-                b.label = "Table (" + el.rows.size() + " rows)";
+                int rowCount = el.rows == null ? 0 : el.rows.size();
+                b.label = "Table (" + rowCount + " rows)";
                 StringBuilder tb = new StringBuilder();
                 if (el.headers != null && !el.headers.isEmpty()) {
-                    tb.append(String.join(" | ", el.headers)).append("\n");
+                    tb.append(joinCells(el.headers)).append("\n");
                 }
-                for (List<String> row : el.rows) {
-                    tb.append(String.join(" | ", row)).append("\n");
+                if (el.rows != null) {
+                    for (List<String> row : el.rows) {
+                        tb.append(joinCells(row)).append("\n");
+                    }
                 }
                 b.text = tb.toString().trim();
                 break;
@@ -106,6 +112,16 @@ public class SpecPreviewAdapter extends RecyclerView.Adapter<SpecPreviewAdapter.
                 break;
         }
         return b;
+    }
+
+    private static String joinCells(List<String> cells) {
+        if (cells == null || cells.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < cells.size(); i++) {
+            if (i > 0) sb.append(" | ");
+            sb.append(cells.get(i) == null ? "" : cells.get(i));
+        }
+        return sb.toString();
     }
 
     @NonNull
